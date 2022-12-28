@@ -56,58 +56,64 @@
       </a>
     </div>
 
-    <p>Motivation: after completion of my Data Science and Decisions degree at UNSW I feel that my skillset is primarily lacking in the area of Data Visualisation industry practices. One particularly sought-out skill which will be the main focus of this blog is Tableau. Tableau is a powerful data visualization tool that is widely used in various industries to analyze and communicate complex data. COVID-19 was chosen as the focus of this project since the pandemic has been major factor in the lives of many individuals and businesses alike since 2019. The global pandemic has also led to a large abundance of geospatial data which will be used in this project.  </p>
-    <p>Technologies used: </p>
-    <ul>
-    <li>Excel</li>
-    <li>Microsoft SQL Server Management Studio (SSMS)</li>
-    <li>Tableau Public </li>
-    </ul>
-    <hr>
-    <h3 id="data-collection">Data Collection</h3>
-    <p>The data for this project comes from <a href="https://ourworldindata.org/covid-deaths">Link</a>. </p>
-    <h4 id="data-includes-non-exclusive-">Data includes (non-exclusive):</h4>
-    <ul>
-    <li>date</li>
-    <li>location</li>
-    <li>new_cases </li>
-    <li>new_deaths</li>
-    <li>population</li>
-    </ul>
-    <p>We can then import this data into a SQL database to be used in querying in SSMS. </p>
-    <h3 id="data-exploration">Data Exploration</h3>
-    <p>The data used in this project is relatively clean and thus does not need to undergo any cleaning. 
-    We can go straight to writing SQL queries to retrieve the data we want from our database. </p>
-    <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SUM</span>(new_cases) <span class="hljs-keyword">as</span> total_cases, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(new_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>)) <span class="hljs-keyword">as</span> total_deaths, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(new_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>))/<span class="hljs-keyword">SUM</span>(new_cases)*<span class="hljs-number">100</span> <span class="hljs-keyword">as</span> DeathPercentage
-    <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
-    <span class="hljs-keyword">WHERE</span> continent <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">null</span>
-    <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>
-    </code></pre>
-    <p>This first query gives us information on the aggregate number of cases and deaths as well as death percentage of confirmed cases. </p>
-    <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(total_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>)) <span class="hljs-keyword">as</span> TotalDeathCount
-    <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
-    <span class="hljs-keyword">WHERE</span> continent <span class="hljs-keyword">is</span> <span class="hljs-literal">null</span>
-        <span class="hljs-keyword">and</span> location <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> (<span class="hljs-string">'World'</span>, <span class="hljs-string">'European Union'</span>, <span class="hljs-string">'International'</span>, <span class="hljs-string">'High income'</span>, <span class="hljs-string">'Upper middle income'</span>, <span class="hljs-string">'Lower middle income'</span>, <span class="hljs-string">'Low income'</span>)
-    <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location
-    <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> TotalDeathCount <span class="hljs-keyword">desc</span>
-    </code></pre>
-    <p>This next query gives us the total number of deaths in each continent.</p>
-    <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, population, <span class="hljs-keyword">MAX</span>(total_cases) <span class="hljs-keyword">as</span> HighestInfectionCount, <span class="hljs-keyword">MAX</span>((total_cases/population)*<span class="hljs-number">100</span>) <span class="hljs-keyword">as</span> PercentPopulationInfected
-    <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
-    <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location, Population
-    <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> PercentPopulationInfected <span class="hljs-keyword">desc</span>
-    </code></pre>
-    <p>The third query returns information on the location, population, highest infection count and percent of the population that has been infected.</p>
-    <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, population, <span class="hljs-built_in">date</span>, <span class="hljs-keyword">MAX</span>(total_cases) <span class="hljs-keyword">as</span> HighestInfectionCount, <span class="hljs-keyword">MAX</span>((total_cases/population)*<span class="hljs-number">100</span>) <span class="hljs-keyword">as</span> PercentPopulationInfected
-    <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
-    <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location, Population, <span class="hljs-built_in">date</span>
-    <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> PercentPopulationInfected <span class="hljs-keyword">desc</span>
-    </code></pre>
-    <p>Finally, the last query gives us the same information as query 3 but as a time series. </p>
-    <h3 id="dashboard-building">Dashboard Building</h3>
-    <p>The final step of this project is to visualise my findings in a Tableau dashboard. 
-    My key takeaways from this part of the project is </p>
+    <!-- MAIN PAGE CONTENT -->
+    <div id="main-content">
 
+        <!-- PROJECT HEADER -->
+        <div id="project-header">
+            <p>Motivation: after completion of my Data Science and Decisions degree at UNSW I feel that my skillset is primarily lacking in the area of Data Visualisation industry practices. One particularly sought-out skill which will be the main focus of this blog is Tableau. Tableau is a powerful data visualization tool that is widely used in various industries to analyze and communicate complex data. COVID-19 was chosen as the focus of this project since the pandemic has been major factor in the lives of many individuals and businesses alike since 2019. The global pandemic has also led to a large abundance of geospatial data which will be used in this project.  </p>
+            <p>Technologies used: </p>
+            <ul>
+            <li>Excel</li>
+            <li>Microsoft SQL Server Management Studio (SSMS)</li>
+            <li>Tableau Public </li>
+            </ul>
+            <hr>
+            <h3 id="data-collection">Data Collection</h3>
+            <p>The data for this project comes from <a href="https://ourworldindata.org/covid-deaths">Link</a>. </p>
+            <h4 id="data-includes-non-exclusive-">Data includes (non-exclusive):</h4>
+            <ul>
+            <li>date</li>
+            <li>location</li>
+            <li>new_cases </li>
+            <li>new_deaths</li>
+            <li>population</li>
+            </ul>
+            <p>We can then import this data into a SQL database to be used in querying in SSMS. </p>
+            <h3 id="data-exploration">Data Exploration</h3>
+            <p>The data used in this project is relatively clean and thus does not need to undergo any cleaning. 
+            We can go straight to writing SQL queries to retrieve the data we want from our database. </p>
+            <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> <span class="hljs-keyword">SUM</span>(new_cases) <span class="hljs-keyword">as</span> total_cases, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(new_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>)) <span class="hljs-keyword">as</span> total_deaths, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(new_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>))/<span class="hljs-keyword">SUM</span>(new_cases)*<span class="hljs-number">100</span> <span class="hljs-keyword">as</span> DeathPercentage
+            <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
+            <span class="hljs-keyword">WHERE</span> continent <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">null</span>
+            <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> <span class="hljs-number">1</span>,<span class="hljs-number">2</span>
+            </code></pre>
+            <p>This first query gives us information on the aggregate number of cases and deaths as well as death percentage of confirmed cases. </p>
+            <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, <span class="hljs-keyword">SUM</span>(<span class="hljs-keyword">CAST</span>(total_deaths <span class="hljs-keyword">as</span> <span class="hljs-built_in">int</span>)) <span class="hljs-keyword">as</span> TotalDeathCount
+            <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
+            <span class="hljs-keyword">WHERE</span> continent <span class="hljs-keyword">is</span> <span class="hljs-literal">null</span>
+                <span class="hljs-keyword">and</span> location <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> (<span class="hljs-string">'World'</span>, <span class="hljs-string">'European Union'</span>, <span class="hljs-string">'International'</span>, <span class="hljs-string">'High income'</span>, <span class="hljs-string">'Upper middle income'</span>, <span class="hljs-string">'Lower middle income'</span>, <span class="hljs-string">'Low income'</span>)
+            <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location
+            <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> TotalDeathCount <span class="hljs-keyword">desc</span>
+            </code></pre>
+            <p>This next query gives us the total number of deaths in each continent.</p>
+            <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, population, <span class="hljs-keyword">MAX</span>(total_cases) <span class="hljs-keyword">as</span> HighestInfectionCount, <span class="hljs-keyword">MAX</span>((total_cases/population)*<span class="hljs-number">100</span>) <span class="hljs-keyword">as</span> PercentPopulationInfected
+            <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
+            <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location, Population
+            <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> PercentPopulationInfected <span class="hljs-keyword">desc</span>
+            </code></pre>
+            <p>The third query returns information on the location, population, highest infection count and percent of the population that has been infected.</p>
+            <pre><code class="lang-tsql"><span class="hljs-keyword">SELECT</span> location, population, <span class="hljs-built_in">date</span>, <span class="hljs-keyword">MAX</span>(total_cases) <span class="hljs-keyword">as</span> HighestInfectionCount, <span class="hljs-keyword">MAX</span>((total_cases/population)*<span class="hljs-number">100</span>) <span class="hljs-keyword">as</span> PercentPopulationInfected
+            <span class="hljs-keyword">FROM</span> PortfolioProject..CovidDeaths
+            <span class="hljs-keyword">GROUP</span> <span class="hljs-keyword">BY</span> Location, Population, <span class="hljs-built_in">date</span>
+            <span class="hljs-keyword">ORDER</span> <span class="hljs-keyword">BY</span> PercentPopulationInfected <span class="hljs-keyword">desc</span>
+            </code></pre>
+            <p>Finally, the last query gives us the same information as query 3 but as a time series. </p>
+            <h3 id="dashboard-building">Dashboard Building</h3>
+            <p>The final step of this project is to visualise my findings in a Tableau dashboard. 
+            My key takeaways from this part of the project is </p>
+        </div>
+    </div>    
 
 
     <!-- FOOTER -->
